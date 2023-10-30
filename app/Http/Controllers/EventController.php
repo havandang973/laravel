@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\Organizer;
+use App\Models\EventTicket;
+use App\Models\Sessions;
+use App\Models\Channel;
+use App\Models\Room;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use Illuminate\Support\MessageBag;
@@ -67,10 +71,28 @@ class EventController extends Controller
 
     public function index_detail($slug) {
         $events = Event::query()->where('slug', $slug)->first();
+
+        $idEvent = $events->id;
         $nameEvent = $events->name;
         $dateEvent = $events->date;
 
-        return view('events.detail', ['name' => $nameEvent, 'date' => $dateEvent, 'slug' => $slug]);
+        $events_tickets = EventTicket::query()->where('event_id', $idEvent)->get();
+
+        $channels = Channel::query()->where('event_id', $idEvent)->get();
+
+        $rooms = Room::query()->whereIn('channel_id', $channels->pluck('id'))->get();
+
+        $sessions = Sessions::query()->whereIn('room_id', $rooms->pluck('id'))->get();
+
+        return view('events.detail', [
+            'name' => $nameEvent,
+            'date' => $dateEvent,
+            'slug' => $slug,
+            'events_tickets' => $events_tickets,
+            'channels' => $channels,
+            'rooms' => $rooms,
+            'sessions' => $sessions
+        ]);
     }
 
     public function index_edit($slug) {

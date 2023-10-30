@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrganizerController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\EventTicketController;
+use App\Http\Controllers\ChannelController;
+use App\Http\Controllers\SessionsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,9 +28,9 @@ Route::get('/index.html', function () {
 
 Route::post('/index.html', [OrganizerController::class, 'login']);
 
-Route::get('/channels/create.html', function () {
-    return view('channels.create');
-});
+Route::get('/channels/create.html/{slug}', [ChannelController::class, 'index']);
+
+Route::post('/channels/create.html/{slug}', [ChannelController::class, 'create']);
 
 Route::get('/events/create.html', function() {
     return view('events.create');
@@ -53,14 +56,13 @@ Route::get('/rooms/create.html', function () {
     return view('rooms.create');
 });
 
-Route::get('/sessions/create.html', function () {
-    return view('sessions.create');
-});
+Route::get('/sessions/create.html/{slug}', [SessionsController::class, 'index']);
+
+Route::post('/sessions/create.html/{slug}', [SessionsController::class, 'create']);
 
 Route::get('/sessions/edit.html', function () {
     return view('sessions.edit');
 });
 
-Route::get('/tickets/create.html', function () {
-    return view('tickets.create');
-});
+Route::get('/tickets/create.html/{slug}', [EventTicketController::class, 'index']);
+Route::post('/tickets/create.html/{slug}', [EventTicketController::class, 'create']);

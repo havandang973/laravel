@@ -15,7 +15,7 @@
 <body>
 <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
     <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="events/index.html">Nền tảng sự kiện</a>
-    <span class="navbar-organizer w-100">{tên tổ chức}</span>
+    <span class="navbar-organizer w-100">{{session('name')}}</span>
     <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
             <a class="nav-link" id="logout" href="index.html">Đăng xuất</a>
@@ -32,7 +32,7 @@
                 </ul>
 
                 <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                    <span>{tên sự kiện}</span>
+                    <span>{{$name}}</span>
                 </h6>
                 <ul class="nav flex-column">
                     <li class="nav-item"><a class="nav-link active" href="events/detail.html">Tổng quan</a></li>
@@ -50,9 +50,9 @@
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
             <div class="border-bottom mb-3 pt-3 pb-2">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
-                    <h1 class="h2">{chèn tên sự kiện}</h1>
+                    <h1 class="h2">{{$name}}</h1>
                 </div>
-                <span class="h6">{chèn ngày sự kiện}</span>
+                <span class="h6">{{$date}}</span>
             </div>
 
             <div class="mb-3 pt-3 pb-2">
@@ -61,8 +61,8 @@
                 </div>
             </div>
 
-            <form class="needs-validation" novalidate action="events/detail.html">
-
+            <form method="POST" class="needs-validation" novalidate action="/sessions/create.html/{{$slug}}">
+                @csrf
                 <div class="row">
                     <div class="col-12 col-lg-4 mb-3">
                         <label for="selectType">Loại</label>
@@ -95,10 +95,13 @@
                     <div class="col-12 col-lg-4 mb-3">
                         <label for="selectRoom">Phòng</label>
                         <select class="form-control" id="selectRoom" name="room">
-                            <option value="1">Phòng A / Chính</option>
-                            <option value="2">Phòng B / Chính</option>
-                            <option value="3">Phòng C / Phụ</option>
-                            <option value="4">Phòng D / Phụ</option>
+                            @foreach($rooms as $room)
+                                <option value="{{$room->id}}">{{$room->name}} / {{$room->channel->name}}</option>
+                            @endforeach
+{{--                            <option value="1">Phòng A / Chính</option>--}}
+{{--                            <option value="2">Phòng B / Chính</option>--}}
+{{--                            <option value="3">Phòng C / Phụ</option>--}}
+{{--                            <option value="4">Phòng D / Phụ</option>--}}
                         </select>
                     </div>
                 </div>
@@ -140,7 +143,7 @@
 
                 <hr class="mb-4">
                 <button class="btn btn-primary" type="submit">Lưu phiên</button>
-                <a href="events/detail.html" class="btn btn-link">Bỏ qua</a>
+                <a href="events/detail.html/{{$slug}}" class="btn btn-link">Bỏ qua</a>
             </form>
 
         </main>

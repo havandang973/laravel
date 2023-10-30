@@ -71,7 +71,7 @@
                     <h2 class="h4">Vé</h2>
                     <div class="btn-toolbar mb-2 mb-md-0">
                         <div class="btn-group mr-2">
-                            <a href="tickets/create.html" class="btn btn-sm btn-outline-secondary">
+                            <a href="tickets/create.html/{{$slug}}" class="btn btn-sm btn-outline-secondary">
                                 Tạo vé mới
                             </a>
                         </div>
@@ -80,33 +80,27 @@
             </div>
 
             <div class="row tickets">
-                <div class="col-md-4">
-                    <div class="card mb-4 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">Thường</h5>
-                            <p class="card-text">200.-</p>
-                            <p class="card-text">&nbsp;</p>
+                @foreach($events_tickets as $events_ticket)
+                    <div class="col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">{{$events_ticket->name}}</h5>
+                                <p class="card-text">{{$events_ticket->cost}}</p>
+                                @php
+                                    $special_validity = json_decode($events_ticket->special_validity);
+                                    if ($special_validity !== null && isset($special_validity->type)) {
+//                                        $date = htmlspecialchars($special_validity->date);
+                                        if($special_validity->type === 'date') {
+                                             echo "<p class='card-text'>Sẵn có cho đến ". date_format(date_create($special_validity->date),"M d, Y") ."</p>";
+                                        }else {
+                                             echo "<p class='card-text'>$special_validity->amount vé có sẵn</p>";
+                                        }
+                                    }
+                                @endphp
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card mb-4 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">Đặt sớm</h5>
-                            <p class="card-text">120.-</p>
-                            <p class="card-text">Sẵn có cho đến June 1, 2019</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card mb-4 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">VIP</h5>
-                            <p class="card-text">400.-</p>
-                            <p class="card-text">100 vé sẵn có</p>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
 
             <!-- Sessions -->
@@ -115,7 +109,7 @@
                     <h2 class="h4">Phiên</h2>
                     <div class="btn-toolbar mb-2 mb-md-0">
                         <div class="btn-group mr-2">
-                            <a href="sessions/create.html" class="btn btn-sm btn-outline-secondary">
+                            <a href="sessions/create.html/{{$slug}}" class="btn btn-sm btn-outline-secondary">
                                 Tạo phiên mới
                             </a>
                         </div>
@@ -135,27 +129,15 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td class="text-nowrap">08:30 - 10:00</td>
-                        <td>Talk</td>
-                        <td><a href="sessions/edit.html">Chủ đạo</a></td>
-                        <td class="text-nowrap">Một người quan trọng</td>
-                        <td class="text-nowrap">Chính / Phòng A</td>
-                    </tr>
-                    <tr>
-                        <td class="text-nowrap">10:15 - 11:00</td>
-                        <td>Talk</td>
-                        <td><a href="sessions/edit.html">X có gì mới?</a></td>
-                        <td class="text-nowrap">Người khác</td>
-                        <td class="text-nowrap">Chính / Phòng A</td>
-                    </tr>
-                    <tr>
-                        <td class="text-nowrap">10:15 - 11:00</td>
-                        <td>Workshop</td>
-                        <td><a href="sessions/edit.html">Thực hành với Y</a></td>
-                        <td class="text-nowrap">Người khác</td>
-                        <td class="text-nowrap">Phụ / Phòng C</td>
-                    </tr>
+                    @foreach($sessions as $session)
+                        <tr>
+                            <td class="text-nowrap">{{date_format(date_create($session->start),"H:i")}} - {{date_format(date_create($session->end),"H:i")}}</td>
+                            <td>{{$session->type}}</td>
+                            <td><a href="sessions/edit.html">{{$session->title}}</a></td>
+                            <td class="text-nowrap">{{$session->speaker}}</td>
+                            <td class="text-nowrap">{{$session->room->channel->name}} / {{$session->room->name}}</td>
+                        </tr>
+                    @endforeach
                     </tbody>
                 </table>
             </div>
@@ -166,7 +148,7 @@
                     <h2 class="h4">Kênh</h2>
                     <div class="btn-toolbar mb-2 mb-md-0">
                         <div class="btn-group mr-2">
-                            <a href="channels/create.html" class="btn btn-sm btn-outline-secondary">
+                            <a href="channels/create.html/{{$slug}}" class="btn btn-sm btn-outline-secondary">
                                 Tạo kênh mới
                             </a>
                         </div>
@@ -175,22 +157,16 @@
             </div>
 
             <div class="row channels">
-                <div class="col-md-4">
-                    <div class="card mb-4 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">Chính</h5>
-                            <p class="card-text">3 Phiên, 1 phòng</p>
+                @foreach($channels as $channel)
+                    <div class="col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">{{$channel->name}}</h5>
+                                <p class="card-text">{{$channel->sessions->count()}} Phiên, {{$channel->room->count()}} phòng</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card mb-4 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">Phụ</h5>
-                            <p class="card-text">15 phiên, 2 phòng</p>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
 
             <!-- Rooms -->
@@ -216,22 +192,12 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>Phòng A</td>
-                        <td>1,000</td>
-                    </tr>
-                    <tr>
-                        <td>Phòng B</td>
-                        <td>100</td>
-                    </tr>
-                    <tr>
-                        <td>Phòng C</td>
-                        <td>100</td>
-                    </tr>
-                    <tr>
-                        <td>Phòng D</td>
-                        <td>250</td>
-                    </tr>
+                    @foreach($rooms as $room)
+                        <tr>
+                            <td>{{$room->name}}</td>
+                            <td>{{$room->capacity}}</td>
+                        </tr>
+                    @endforeach
                     </tbody>
                 </table>
             </div>
