@@ -17,4 +17,15 @@ class Event extends Model
         'slug',
         'date',
     ];
+
+    public function ticket()
+    {
+        return $this->hasMany(EventTicket::class);
+    }
+
+    public function registration()
+    {
+        return $this->hasManyThrough(Registration::class, EventTicket::class, 'event_id', 'ticket_id');
+    }
+
 }

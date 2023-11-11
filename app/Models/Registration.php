@@ -5,17 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class EventTicket extends Model
+class Registration extends Model
 {
     use HasFactory;
 
     public $timestamps = false;
 
     protected $fillable = [
-        'event_id',
-        'name',
-        'cost',
-        'special_validity',
+        'attendee_id',
+        'ticket_id',
+        'registration_time'
     ];
 
     public function event()
@@ -23,8 +22,8 @@ class EventTicket extends Model
         return $this->belongsTo(Event::class);
     }
 
-    public function registration()
+    public function ticket()
     {
-        return $this->hasMany(Registration::class);
+        return $this->belongsTo(EventTicket::class);
     }
 }

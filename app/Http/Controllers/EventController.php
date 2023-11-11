@@ -59,6 +59,11 @@ class EventController extends Controller
         $slug = \request()->input('slug');
         $date = \request()->input('date');
 
+        if(!preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $date)){
+            $errors->add('date-format', 'Ngày lỗi định dạng');
+            return redirect()->back()->withErrors($errors)->withInput();
+        }
+
         Event::query()->create([
             'organizer_id' => $id,
             'name' => $name,
@@ -105,13 +110,13 @@ class EventController extends Controller
     }
 
     public function edit($slug) {
+        $errors = new MessageBag();
+
         $events = Event::query()->where('slug', $slug)->first();
 
         $events->name = \request()->input('name');
         $events->slug = \request()->input('slug');
         $events->date = \request()->input('date');
-
-        $errors = new MessageBag();
 
         $existingSlug = Event::where('slug', $events->slug)->exists();
 
@@ -121,9 +126,15 @@ class EventController extends Controller
         } else if(!empty($events->slug) && !preg_match("/^[a-z0-9\-]+$/", $events->slug)) {
             $errors->add('slug-invalid', "Slug không được để trống và chỉ chứa các ký tự a-z, 0-9 và '-'");
             return redirect()->back()->withErrors($errors)->withInput();
-        } else {
-            $events->save();
-            return redirect()->route('events.detail', ['slug' => $events->slug])->with('success', "✓ Cập nhật sự kiện thành công!");
         }
+
+        if(!preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $events->date)){
+            $errors->add('date-format', 'Ngày lỗi định dạng');
+            return redirect()->back()->withErrors($errors)->withInput();
+        }
+
+        $events->save();
+        return redirect()->route('events.detail', ['slug' => $events->slug])->with('success', "✓ Cập nhật sự kiện thành công!");
+
     }
 }

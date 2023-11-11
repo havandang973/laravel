@@ -51,10 +51,10 @@
                     <div class="col-12 col-lg-4 mb-3">
                         <label for="inputName">Tên</label>
                         <!-- adding the class is-invalid to the input, shows the invalid feedback below -->
-                        <input type="text" class="form-control is-invalid" id="inputName" name="name" placeholder="" value="{{old('name')}}" required>
-                        <div class="invalid-feedback">
-                            Tên không được để trống.
-                        </div>
+                        <input type="text" class="form-control" id="inputName" name="name" placeholder="" value="{{old('name')}}" required>
+{{--                        <div class="invalid-feedback">--}}
+{{--                            Tên không được để trống.--}}
+{{--                        </div>--}}
                     </div>
                 </div>
 
@@ -91,6 +91,11 @@
                                name="date"
                                placeholder="yyyy-mm-dd"
                                value="{{old('date')}}" required>
+                        @if($errors->has('date-format'))
+                            <div style="color: red; font-size: 80%; margin-top: 0.25rem;">
+                                {{ $errors->first('date-format') }}
+                            </div>
+                        @endif
                     </div>
                 </div>
 

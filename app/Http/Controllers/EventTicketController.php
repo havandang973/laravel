@@ -48,6 +48,11 @@ class EventTicketController extends Controller
             $special_validity = '{"type":"date","date":"'.$valid_until.'"}';
         }
 
+        if(!preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) (2[0-3]|[01][0-9]):[0-5][0-9]$/", $valid_until)){
+            $errors->add('date-format', 'Ngày lỗi định dạng');
+            return redirect()->back()->withErrors($errors)->withInput();
+        }
+
         EventTicket::query()->create([
             'event_id' => $event_id,
             'name' => $name,

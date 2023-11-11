@@ -68,7 +68,7 @@
                     <div class="col-12 col-lg-4 mb-3">
                         <label for="inputName">Tên</label>
                         <!-- adding the class is-invalid to the input, shows the invalid feedback below -->
-                        <input type="text" class="form-control is-invalid" id="inputName" name="name" placeholder="" value="">
+                        <input type="text" class="form-control is-invalid" id="inputName" name="name" placeholder="" value="{{old('name')}}" required>
                         <div class="invalid-feedback">
                             Tên không được để trống.
                         </div>
@@ -78,7 +78,7 @@
                 <div class="row">
                     <div class="col-12 col-lg-4 mb-3">
                         <label for="inputCost">Giá</label>
-                        <input type="number" class="form-control" id="inputCost" name="cost" placeholder="" value="0">
+                        <input type="number" class="form-control" id="inputCost" name="cost" placeholder="" value="0" required>
                     </div>
                 </div>
 
@@ -108,7 +108,12 @@
                                id="inputValidTill"
                                name="valid_until"
                                placeholder="yyyy-mm-dd HH:MM"
-                               value="">
+                               value="{{old('valid_until')}}" required>
+                        @if($errors->has('date-format'))
+                            <div style="color: red; font-size: 80%; margin-top: 0.25rem;">
+                                {{ $errors->first('date-format') }}
+                            </div>
+                        @endif
                     </div>
                 </div>
 

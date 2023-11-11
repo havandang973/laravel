@@ -93,6 +93,11 @@
                                id="inputDate"
                                placeholder="yyyy-mm-dd"
                                value="{{$date}}">
+                        @if($errors->has('date-format'))
+                            <div style="color: red; font-size: 80%; margin-top: 0.25rem;">
+                                {{ $errors->first('date-format') }}
+                            </div>
+                        @endif
                     </div>
                 </div>
 

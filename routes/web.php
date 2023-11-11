@@ -6,6 +6,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventTicketController;
 use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\SessionsController;
+use App\Http\Controllers\RoomController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,7 +23,7 @@ Route::get('/', function () {
     return view('index');
 });
 
-Route::get('/index.html', function () {
+Route::get('/login', function () {
     return view('index');
 })->name('home');
 
@@ -52,9 +53,9 @@ Route::get('/reports/index.html', function () {
     return view('reports.index');
 });
 
-Route::get('/rooms/create.html', function () {
-    return view('rooms.create');
-});
+Route::get('/rooms/create.html/{slug}', [RoomController::class, 'index']);
+
+Route::post('/rooms/create.html/{slug}', [RoomController::class, 'create']);
 
 Route::get('/sessions/create.html/{slug}', [SessionsController::class, 'index']);
 
